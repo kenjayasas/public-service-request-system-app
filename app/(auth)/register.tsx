@@ -31,8 +31,7 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const { token } = await authApi.register(name.trim(), email.trim(), password);
-      const user      = await authApi.getUser();
+      const { token, user } = await authApi.register(name.trim(), email.trim(), password);
       await login(token, user);
     } catch (err: any) {
       if (err.errors) {

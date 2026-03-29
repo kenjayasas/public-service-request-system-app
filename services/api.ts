@@ -4,8 +4,8 @@ import { Platform } from 'react-native';
 // For Android emulator use 10.0.2.2, for iOS simulator use localhost
 // Change this to your machine's local IP if testing on a real device
 const BASE_URL = Platform.OS === 'android'
-  ? 'http://10.0.2.2:8000/api'
-  : 'http://localhost:8000/api';
+  ? 'http://10.0.2.2:8090/api'
+  : 'http://localhost:8090/api';
 
 const TOKEN_KEY = '@govassist_token';
 
@@ -63,7 +63,7 @@ export const authApi = {
     request<{ token: string }>('POST', '/login', { email, password }),
 
   register: (name: string, email: string, password: string) =>
-    request<{ token: string }>('POST', '/register', { name, email, password }),
+    request<{ token: string; user: any }>('POST', '/register', { name, email, password }),
 
   logout: () => request<{ message: string }>('POST', '/logout'),
 

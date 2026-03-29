@@ -127,7 +127,7 @@ export default function LoginScreen() {
 
           {/* Register link */}
           <View style={styles.registerSection}>
-            <Text style={styles.registerText}>Don't have an account?</Text>
+            <Text style={styles.registerText}>Don`t have an account?</Text>
             <Link href="/(auth)/register" asChild>
               <TouchableOpacity style={styles.btnRegister}>
                 <Ionicons name="person-add" size={16} color={Colors.orange} />
