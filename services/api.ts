@@ -1,11 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-// For Android emulator use 10.0.2.2, for iOS simulator use localhost
-// Change this to your machine's local IP if testing on a real device
-const BASE_URL = Platform.OS === 'android'
-  ? 'http://10.0.2.2:8090/api'
-  : 'http://localhost:8090/api';
+// Use your machine's LAN IP so physical devices can reach the backend
+const BASE_URL = 'http://192.168.100.205:8090/api';
 
 const TOKEN_KEY = '@govassist_token';
 
