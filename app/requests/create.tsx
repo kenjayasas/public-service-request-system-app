@@ -5,11 +5,14 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/theme';
+import { Colors, getThemeColors } from '@/constants/theme';
+import { useTheme } from '@/context/ThemeContext';
 import { categoryApi, requestApi } from '@/services/api';
 
 export default function CreateRequestScreen() {
   const router = useRouter();
+  const { isDark } = useTheme();
+  const t = getThemeColors(isDark);
 
   const [categories, setCategories] = useState<any[]>([]);
   const [loadingCats, setLoadingCats] = useState(true);
@@ -69,29 +72,37 @@ export default function CreateRequestScreen() {
   };
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+    <ScrollView
+      style={[styles.screen, { backgroundColor: t.bg }]}
+      contentContainerStyle={styles.content}
+      keyboardShouldPersistTaps="handled"
+    >
       {/* Title */}
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>Title <Text style={styles.required}>*</Text></Text>
+        <Text style={[styles.label, { color: t.textSecondary }]}>
+          Title <Text style={styles.required}>*</Text>
+        </Text>
         <TextInput
-          style={[styles.input, errors.title ? styles.inputError : null]}
+          style={[styles.input, { backgroundColor: t.inputBg, borderColor: errors.title ? Colors.errorText : t.inputBorder, color: t.text }]}
           value={title}
-          onChangeText={t => { setTitle(t); setErrors(p => ({ ...p, title: '' })); }}
+          onChangeText={txt => { setTitle(txt); setErrors(p => ({ ...p, title: '' })); }}
           placeholder="Brief title of your request"
-          placeholderTextColor={Colors.textMuted}
+          placeholderTextColor={t.textMuted}
         />
         {errors.title ? <Text style={styles.errorText}>{errors.title}</Text> : null}
       </View>
 
       {/* Description */}
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>Description <Text style={styles.required}>*</Text></Text>
+        <Text style={[styles.label, { color: t.textSecondary }]}>
+          Description <Text style={styles.required}>*</Text>
+        </Text>
         <TextInput
-          style={[styles.input, styles.textarea, errors.description ? styles.inputError : null]}
+          style={[styles.input, styles.textarea, { backgroundColor: t.inputBg, borderColor: errors.description ? Colors.errorText : t.inputBorder, color: t.text }]}
           value={description}
-          onChangeText={t => { setDescription(t); setErrors(p => ({ ...p, description: '' })); }}
+          onChangeText={txt => { setDescription(txt); setErrors(p => ({ ...p, description: '' })); }}
           placeholder="Describe the issue in detail..."
-          placeholderTextColor={Colors.textMuted}
+          placeholderTextColor={t.textMuted}
           multiline
           numberOfLines={5}
           textAlignVertical="top"
@@ -101,7 +112,9 @@ export default function CreateRequestScreen() {
 
       {/* Category */}
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>Category <Text style={styles.required}>*</Text></Text>
+        <Text style={[styles.label, { color: t.textSecondary }]}>
+          Category <Text style={styles.required}>*</Text>
+        </Text>
         {loadingCats ? (
           <ActivityIndicator color={Colors.orange} style={{ marginTop: 8 }} />
         ) : (
@@ -109,10 +122,14 @@ export default function CreateRequestScreen() {
             {categories.map(cat => (
               <TouchableOpacity
                 key={cat.id}
-                style={[styles.chip, categoryId === cat.id && styles.chipActive]}
+                style={[
+                  styles.chip,
+                  { backgroundColor: t.card, borderColor: t.border },
+                  categoryId === cat.id && styles.chipActive,
+                ]}
                 onPress={() => { setCategoryId(cat.id); setErrors(p => ({ ...p, category: '' })); }}
               >
-                <Text style={[styles.chipText, categoryId === cat.id && styles.chipTextActive]}>
+                <Text style={[styles.chipText, { color: t.textSecondary }, categoryId === cat.id && styles.chipTextActive]}>
                   {cat.name}
                 </Text>
               </TouchableOpacity>
@@ -124,22 +141,24 @@ export default function CreateRequestScreen() {
 
       {/* Location */}
       <View style={styles.fieldGroup}>
-        <Text style={styles.label}>Location <Text style={styles.required}>*</Text></Text>
+        <Text style={[styles.label, { color: t.textSecondary }]}>
+          Location <Text style={styles.required}>*</Text>
+        </Text>
         <View style={styles.inputRow}>
-          <Ionicons name="location-outline" size={16} color={Colors.textMuted} style={styles.inputIcon} />
+          <Ionicons name="location-outline" size={16} color={t.textMuted} style={styles.inputIcon} />
           <TextInput
-            style={[styles.input, styles.inputFlex, errors.location ? styles.inputError : null]}
+            style={[styles.input, styles.inputFlex, { backgroundColor: t.inputBg, borderColor: errors.location ? Colors.errorText : t.inputBorder, color: t.text }]}
             value={location}
-            onChangeText={t => { setLocation(t); setErrors(p => ({ ...p, location: '' })); }}
+            onChangeText={txt => { setLocation(txt); setErrors(p => ({ ...p, location: '' })); }}
             placeholder="Street, barangay, city..."
-            placeholderTextColor={Colors.textMuted}
+            placeholderTextColor={t.textMuted}
           />
         </View>
         {errors.location ? <Text style={styles.errorText}>{errors.location}</Text> : null}
       </View>
 
       {/* Submit */}
-      <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} disabled={submitting}>
+      <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit} disabled={submitting} activeOpacity={0.85}>
         {submitting
           ? <ActivityIndicator color="#fff" />
           : (
@@ -155,18 +174,17 @@ export default function CreateRequestScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen:  { flex: 1, backgroundColor: Colors.darkBg },
+  screen:  { flex: 1 },
   content: { padding: 20, paddingBottom: 40 },
 
   fieldGroup: { marginBottom: 20 },
-  label:     { fontSize: 13, fontWeight: '600', color: Colors.textSecondary, marginBottom: 8 },
+  label:     { fontSize: 13, fontWeight: '600', marginBottom: 8 },
   required:  { color: Colors.orange },
 
   input: {
-    backgroundColor: Colors.inputBg, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12,
-    color: Colors.textPrimary, fontSize: 14, borderWidth: 1, borderColor: Colors.inputBorder,
+    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12,
+    fontSize: 14, borderWidth: 1,
   },
-  inputError: { borderColor: Colors.errorText },
   textarea:   { height: 110 },
   inputRow:   { flexDirection: 'row', alignItems: 'center' },
   inputIcon:  { position: 'absolute', left: 14, zIndex: 1 },
@@ -176,11 +194,10 @@ const styles = StyleSheet.create({
 
   chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: {
-    paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20,
-    backgroundColor: Colors.darkCard, borderWidth: 1, borderColor: Colors.darkBorder,
+    paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1,
   },
   chipActive:     { backgroundColor: Colors.orange, borderColor: Colors.orange },
-  chipText:       { fontSize: 13, color: Colors.textSecondary },
+  chipText:       { fontSize: 13, fontWeight: '500' },
   chipTextActive: { color: '#fff', fontWeight: '600' },
 
   submitBtn: {

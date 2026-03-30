@@ -1,12 +1,19 @@
-// GovAssist dark theme - matching the web app
 export const Colors = {
-  // Backgrounds
+  // Dark backgrounds
   darkBg: '#0a0c0f',
   darkSecondary: '#1a1e24',
   darkCard: '#1e2329',
   darkBorder: '#2d3748',
   inputBg: '#2d3748',
   inputBorder: '#4a5568',
+
+  // Light backgrounds
+  lightBg: '#f5f7fa',
+  lightSecondary: '#edf2f7',
+  lightCard: '#ffffff',
+  lightBorder: '#e2e8f0',
+  lightInputBg: '#f0f4f8',
+  lightInputBorder: '#cbd5e1',
 
   // Orange accent
   orange: '#f97316',
@@ -17,6 +24,11 @@ export const Colors = {
   textPrimary: '#ffffff',
   textSecondary: '#9ca3af',
   textMuted: '#6b7280',
+
+  // Light text
+  lightTextPrimary: '#1a202c',
+  lightTextSecondary: '#4a5568',
+  lightTextMuted: '#a0aec0',
 
   // Status colors
   errorBg: 'rgba(239, 68, 68, 0.1)',
@@ -46,3 +58,28 @@ export const StatusLabels: Record<string, string> = {
   completed:   'Completed',
   rejected:    'Rejected',
 };
+
+export const Fonts = {
+  rounded: 'System',
+  mono: 'monospace',
+};
+
+// Helper to get theme-aware colors
+export function getThemeColors(isDark: boolean) {
+  return {
+    bg: isDark ? Colors.darkBg : Colors.lightBg,
+    secondary: isDark ? Colors.darkSecondary : Colors.lightSecondary,
+    card: isDark ? Colors.darkCard : Colors.lightCard,
+    border: isDark ? Colors.darkBorder : Colors.lightBorder,
+    inputBg: isDark ? Colors.inputBg : Colors.lightInputBg,
+    inputBorder: isDark ? Colors.inputBorder : Colors.lightInputBorder,
+    text: isDark ? Colors.textPrimary : Colors.lightTextPrimary,
+    textSecondary: isDark ? Colors.textSecondary : Colors.lightTextSecondary,
+    textMuted: isDark ? Colors.textMuted : Colors.lightTextMuted,
+    orange: Colors.orange,
+    orangeLight: Colors.orangeLight,
+    errorBg: Colors.errorBg,
+    errorText: Colors.errorText,
+    statusBar: isDark ? 'light' as const : 'dark' as const,
+  };
+}

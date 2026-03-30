@@ -59,8 +59,8 @@ export const authApi = {
   login: (email: string, password: string) =>
     request<{ token: string }>('POST', '/login', { email, password }),
 
-  register: (name: string, email: string, password: string) =>
-    request<{ token: string; user: any }>('POST', '/register', { name, email, password }),
+  register: (name: string, email: string, password: string, phone?: string, address?: string) =>
+    request<{ token: string; user: any }>('POST', '/register', { name, email, password, phone, address }),
 
   logout: () => request<{ message: string }>('POST', '/logout'),
 
